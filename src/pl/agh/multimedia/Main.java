@@ -10,6 +10,10 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
+import pl.edu.agh.kis.visca.ViscaResponseReader;
+import pl.edu.agh.kis.visca.cmd.*;
+import jssc.*;
+
 public class Main {
 
 	public static int check = 0;
@@ -61,7 +65,7 @@ public class Main {
 	        buf.append((char) polecenie);
 	    }
 	
-	    System.out.println("Buf: " + buf.toString());
+//	    System.out.println("Buf: " + buf.toString());
 	
 	    String command = buf.toString().split("=")[1];
 //	    String comm = buf.toString().split("=")[1];
@@ -78,119 +82,132 @@ public class Main {
 	}
 	
 	static void executeCommand(String str) {
-		System.out.println("Napisano: "+ str);
+//		System.out.println("Napisano: "+ str);
 		
 		String[] command = new String[1];
 //		System.out.println(str.indexOf("+"));
 		if(str.indexOf("+") != -1) {
-			System.out.println("Jest +: "+ str);
+//			System.out.println("Jest +: "+ str);
 			command = str.split("\\+");
 		}else {
 			command[0] = str;
-			System.out.println("Nie ma: "+ str);
+//			System.out.println("Nie ma: "+ str);
 		}
 		
-		for(String s : command) {
-			System.out.println("nap: " + s);
-		}
+//		for(String s : command) {
+//			System.out.println("nap: " + s);
+//		}
 		
-		System.out.println("Command: " + command);		
+//		System.out.println("Command: " + command);		
 		execute(command);
 	}
 	
 	public static void execute(String[] args) {
-		for(String s : args) {
-			System.out.println("exe: " + s);
-		}
-//		// write your code here
-//	        String portNumber = "COM11";
-//	        SerialPort port = new SerialPort(portNumber);
-//
-//	        try {
-//	            port.openPort();
-//	            port.setParams(9600, 8, 1, 0);
-//	        } catch (SerialPortException e) {
-//	            e.printStackTrace();
-//	        }
-//
+//		for(String s : args) {
+//			System.out.println("exe: " + s);
+//		}
+		// write your code here
+	        String portNumber = "COM11";
+	        SerialPort port = new SerialPort(portNumber);
+
+	        try {
+	            port.openPort();
+	            port.setParams(9600, 8, 1, 0);
+	        } catch (SerialPortException e) {
+	            e.printStackTrace();
+	        }
+
 ////	        while(true){
-//	            System.out.println("Enter VISCA command: ");
+////	            System.out.println("Enter VISCA command: ");
 ////	            Scanner sc = new Scanner(System.in);
 ////	            String command = sc.nextLine();
-//	            String[] cmd = args;//command.split(" ");
-//	            String comm = cmd[0];
-//	            int val = (byte) 0;
-//	            int val2 = (byte) 0;
-//	            if (cmd.length >1){
-//	                val = Integer.parseInt(cmd[1]);
-//	            }
-//	            if (cmd.length >2){
-//	                val2 = Integer.parseInt(cmd[2]);
-//	            }
-//	            System.out.println("Doing: " + comm + " with argument: " + val);
-//	            byte[] ex;
-//
-//	            try {
-//	                byte[] cmdData = {};
-//	                switch (cmd[0]) {
-//	                    case ("left"):
-//	                        cmdData = (new PanTiltLeftCmd()).createCommandData();
-//	                        cmdData[3] = (byte) val;
-//	                        break;
-//	                    case ("right"):
-//	                        cmdData = (new PanTiltRightCmd()).createCommandData();
-//	                        cmdData[3] = (byte) val;
-//	                        break;
-//	                    case ("up"):
-//	                        cmdData = (new PanTiltUpCmd()).createCommandData();
-//	                        cmdData[3] = (byte) val;
-//	                        break;
-//	                    case ("down"):
-//	                        cmdData = (new PanTiltDownCmd()).createCommandData();
-//	                        cmdData[3] = (byte) val;
-//	                        break;
-//	                    case ("home"):
-//	                        cmdData = (new PanTiltHomeCmd()).createCommandData();
-//	                        break;
-//	                    case ("zoomWide"):
-//	                        cmdData = (new ZoomWideStdCmd()).createCommandData();
-//	                        break;
-//	                    case ("zoomTele"):
-//	                        cmdData = (new ZoomTeleStdCmd()).createCommandData();
-//	                        break;
-//	                    default:
-//	                        System.out.println("Not recognized command");
-//	                }
-//
-//	                ViscaCommand vCmd = new ViscaCommand();
-//	                vCmd.commandData = cmdData;
-//	                vCmd.sourceAdr = 0;
-//	                vCmd.destinationAdr = 1;
-//	                cmdData = vCmd.getCommandData();
-//	                System.out.println("@ " + byteArrayToString(cmdData));
-//	                try {
-//	                    port.writeBytes(cmdData);
-//	                } catch (SerialPortException e) {
-//	                    e.printStackTrace();
-//	                }
-//
-//	                try {
-//	                    ex = ViscaResponseReader.readResponse(port);
-//	                    System.out.println("> " + byteArrayToString(ex));
-//	                } catch (ViscaResponseReader.TimeoutException var11) {
-//	                    System.out.println("! TIMEOUT exception");
-//	                }
-//	            }catch(SerialPortException e){
-//	                e.printStackTrace();
-//	            }
-//
-//
-//	            try {
-//	                Thread.sleep(1500);
-//	            } catch (InterruptedException e) {
-//	                e.printStackTrace();
-//	            }
+	            String[] cmd = args;//command.split(" ");
+	            String comm = cmd[0];
+	            int val = (byte) 0;
+	            int val2 = (byte) 0;
+	            if (cmd.length >1){
+	                val = Integer.parseInt(cmd[1]);
+	            }
+	            if (cmd.length >2){
+	                val2 = Integer.parseInt(cmd[2]);
+	            }
+	            System.out.println("Doing: " + comm + " with argument: " + val);
+	            byte[] ex;
+
+	            try {
+	                byte[] cmdData = {};
+	                switch (cmd[0]) {
+	                    case ("left"):
+	                        cmdData = (new PanTiltLeftCmd()).createCommandData();
+	                        cmdData[3] = (byte) val;
+	                        break;
+	                    case ("right"):
+	                        cmdData = (new PanTiltRightCmd()).createCommandData();
+	                        cmdData[3] = (byte) val;
+	                        break;
+	                    case ("up"):
+	                        cmdData = (new PanTiltUpCmd()).createCommandData();
+	                        cmdData[3] = (byte) val;
+	                        break;
+	                    case ("down"):
+	                        cmdData = (new PanTiltDownCmd()).createCommandData();
+	                        cmdData[3] = (byte) val;
+	                        break;
+	                    case ("home"):
+	                        cmdData = (new PanTiltHomeCmd()).createCommandData();
+	                        break;
+	                    case ("zoomWide"):
+	                        cmdData = (new ZoomWideStdCmd()).createCommandData();
+	                        break;
+	                    case ("zoomTele"):
+	                        cmdData = (new ZoomTeleStdCmd()).createCommandData();
+	                        break;
+	                    default:
+	                        System.out.println("Not recognized command");
+	                }
+
+	                ViscaCommand vCmd = new ViscaCommand();
+	                vCmd.commandData = cmdData;
+	                vCmd.sourceAdr = 0;
+	                vCmd.destinationAdr = 1;
+	                cmdData = vCmd.getCommandData();
+	                System.out.println("@ " + byteArrayToString(cmdData));
+	                try {
+	                    port.writeBytes(cmdData);
+	                } catch (SerialPortException e) {
+	                    e.printStackTrace();
+	                }
+
+	                try {
+	                    ex = ViscaResponseReader.readResponse(port);
+	                    System.out.println("> " + byteArrayToString(ex));
+	                } catch (ViscaResponseReader.TimeoutException var11) {
+	                    System.out.println("! TIMEOUT exception");
+	                }
+	            }catch(SerialPortException e){
+	                e.printStackTrace();
+	            }
+
+
+	            try {
+	                Thread.sleep(1500);
+	            } catch (InterruptedException e) {
+	                e.printStackTrace();
+	            }
 ////	        } koniec petli while
 	  }
+	
+	    private static String byteArrayToString(byte[] bytes) {
+	        StringBuilder sb = new StringBuilder();
+	        byte[] var5 = bytes;
+	        int var4 = bytes.length;
+	
+	        for(int var3 = 0; var3 < var4; ++var3) {
+	            byte b = var5[var3];
+	            sb.append(String.format("%02X ", new Object[]{Byte.valueOf(b)}));
+	        }
+	
+	        return sb.toString();
+	    }
 	
 }
